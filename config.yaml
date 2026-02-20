@@ -1,10 +1,11 @@
 paths:
-  train_data: "d:/Codingan/python/nids-projects/nids-cnn-lstm-autoencoder/data/research/rs10_full_feature_filter_corr090/processed/shards/cic/train"
-  test_data: "d:/Codingan/python/nids-projects/nids-cnn-lstm-autoencoder/data/research/rs10_full_feature_filter_corr090/processed/shards/cse/test"
+  # Updated to point to the new Drive location for Colab usage
+  train_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/shards/cic/train"
+  test_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/shards/cse/test"
   output_dir: "d:/Codingan/python/nids-projects/IntrusionDetectionSystem/output"
   model_save_path: "d:/Codingan/python/nids-projects/IntrusionDetectionSystem/models/sota_cnn_lstm.h5"
-  # Scaler is already applied in the NPZ data, but we might want to save/load it if we do inference on new data
-  scaler_path: "d:/Codingan/python/nids-projects/nids-cnn-lstm-autoencoder/data/research/rs10_full_feature_filter_corr090/processed/scaler.pkl"
+  # Scaler is likely in the base folder of the processed data
+  scaler_path: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/scaler.pkl"
 
 model:
   sequence_length: 10 # Fixed by the dataset

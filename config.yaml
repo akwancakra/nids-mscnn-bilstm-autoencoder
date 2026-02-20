@@ -1,11 +1,12 @@
 paths:
   # Updated to point to the new Drive location for Colab usage
-  train_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/shards/cic/train"
-  test_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/shards/cse/test"
+  # Added 'processed' subdirectory
+  train_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/processed/shards/cic/train"
+  test_data: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/processed/shards/cse/test"
   output_dir: "d:/Codingan/python/nids-projects/IntrusionDetectionSystem/output"
   model_save_path: "d:/Codingan/python/nids-projects/IntrusionDetectionSystem/models/sota_cnn_lstm.h5"
   # Scaler is likely in the base folder of the processed data
-  scaler_path: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/scaler.pkl"
+  scaler_path: "/content/drive/MyDrive/nids-data/artifacts/data/research/s2_hybrid_zero_seed42_base/processed/scaler.pkl"
 
 model:
   sequence_length: 10 # Fixed by the dataset

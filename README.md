@@ -1,6 +1,76 @@
 # IntrusionDetectionSystem
 Autoencoder based intrusion detection system trained and tested with the CICIDS2017 data set.  Currently implemented using Python and Tensorflow 2.0.
 
+## Proposal Workflow (Hybrid CNN-LSTM Autoencoder + Cross-Dataset Validation)
+
+To align with the research workflow (train benign-only on CIC-IDS2017, evaluate zero-shot on CSE-CIC-IDS2018, then few-shot adaptation), a new module is available:
+
+- `Python/hybrid_pipeline.py`
+- `Python/benchmark_runner.py` (CLI wrapper with standardized metrics output)
+
+Main API:
+
+- `train_cic2017_normal(...)`
+- `evaluate_zero_shot_cic2018(...)`
+- `adapt_few_shot_benign_1pct(...)`
+- `evaluate_post_adaptation(...)`
+- `train_and_evaluate_cross_dataset(...)`
+
+Minimal usage:
+
+```python
+import hybrid_pipeline as hp
+
+cic2017_rows = [
+    {"f1": 0.1, "f2": 0.2, "Label": "BENIGN"},
+    {"f1": 0.2, "f2": 0.1, "Label": "BENIGN"},
+    # ...
+]
+
+cic2018_rows = [
+    {"f1": 0.1, "f2": 0.2, "Label": "BENIGN"},
+    {"f1": 5.3, "f2": 4.8, "Label": "ATTACK"},
+    # ...
+]
+
+config = hp.HybridExperimentConfig(sequence_length=2, epochs=10)
+state = hp.train_cic2017_normal(cic2017_rows, config=config)
+
+zero_shot = hp.evaluate_zero_shot_cic2018(state, cic2018_rows)
+state = hp.adapt_few_shot_benign_1pct(state, cic2018_rows, benign_ratio=0.01, adaptation_epochs=3)
+few_shot = hp.evaluate_post_adaptation(state, cic2018_rows)
+
+print(zero_shot["metrics"])
+print(few_shot["metrics"])
+```
+
+### Benchmark CLI (Standardized Metrics)
+
+`benchmark_runner.py` adds executable commands so this pipeline can be compared apple-to-apple with other repos:
+
+- `train`
+- `eval-zero-shot`
+- `eval-few-shot`
+- `run-all`
+
+Example (single command end-to-end):
+
+```bash
+python Python/benchmark_runner.py run-all \
+  --cic-data data/raw/CIC-IDS2017 \
+  --cse-data data/raw/CSE-CIC-IDS2018 \
+  --output-dir results/benchmark_seed42 \
+  --seed 42 \
+  --sequence-length 10 \
+  --epochs 15
+```
+
+Produced files include standardized JSON metrics for:
+
+- `CIC-IDS2017` (`mode=in_domain`)
+- `CSE-CIC-IDS2018` (`mode=zero_shot`)
+- `CSE-CIC-IDS2018` (`mode=few_shot`)
+
 ## Current Best Network
 
 The current best network uses a two-layer sparse autoencoder with L1 kernel regularization on the hidden layer.  On data it has previously not seen, this network is capable of correctly identifying 91.3% of BENIGN data (8.7% false positive rate) and 98.3% of attacks (1.7% false negative rate).  

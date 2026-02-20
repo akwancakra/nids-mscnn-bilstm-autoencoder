@@ -128,6 +128,9 @@ def process_files(files, output_dir, scaler, seq_len=10, stride=5, mode='train')
             # Note: scaler expects exact same number of columns as fit
             try:
                 data_scaled = scaler.transform(df.values)
+                # CLIPPING: Force range [0, 1] to handle outliers in Test data
+                # This prevents massive values like 119400326.0 from destroying the model
+                data_scaled = np.clip(data_scaled, 0.0, 1.0)
             except ValueError as e:
                 print(f"Skipping {f} due to shape mismatch: {e}")
                 continue

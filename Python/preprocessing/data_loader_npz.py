@@ -25,10 +25,16 @@ def load_npz_data(data_dir, limit_files=None):
     for f in tqdm(files, desc="Loading Shards", unit="file"):
         try:
             with np.load(f, allow_pickle=True) as data:
-                if 'x' in data:
+                # Handle inconsistent keys (X vs x)
+                if 'X' in data:
+                    xs.append(data['X'])
+                elif 'x' in data:
                     xs.append(data['x'])
+                
                 if 'y' in data:
                     ys.append(data['y'])
+                elif 'Y' in data:
+                    ys.append(data['Y'])
         except Exception as e:
             print(f"Error loading {f}: {e}")
             

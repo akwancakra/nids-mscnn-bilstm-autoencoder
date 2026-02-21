@@ -214,6 +214,10 @@ def main():
     test_out = os.path.join(args.output_dir, "test")
     process_files(test_files, test_out, scaler, args.seq_len, args.stride, mode='test')
     
+    # 5. Process CIC-IDS2017 Test Data (Mixed)
+    test_cic_out = os.path.join(args.output_dir, "test_cic")
+    process_files(train_files, test_cic_out, scaler, args.seq_len, args.stride, mode='test')
+    
     print("Preprocessing Complete!")
 
 if __name__ == "__main__":

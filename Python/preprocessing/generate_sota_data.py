@@ -28,6 +28,12 @@ def clean_dataframe(df):
     # Drop existing columns
     df = df.drop(columns=[c for c in drop_cols if c in df.columns], errors='ignore')
     
+    # Standardize Label column if it exists
+    if 'Label' in df.columns:
+        df['Label'] = df['Label'].astype(str).str.strip().str.upper()
+        # Remove header rows that might have leaked into the data
+        df = df[df['Label'] != 'LABEL']
+    
     # Replace Inf with NaN
     df = df.replace([np.inf, -np.inf], np.nan)
     
@@ -42,6 +48,7 @@ def get_benign_data(df):
     Assumes 'Label' column exists.
     """
     if 'Label' in df.columns:
+        # Label is already uppercase from clean_dataframe
         return df[df['Label'] == 'BENIGN'].drop(columns=['Label'], errors='ignore')
     return df
 
